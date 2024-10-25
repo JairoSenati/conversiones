@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <title>Kilogramos a Onzas y Libras</title>
+    <style>
+      #resultado {
+        font-weight: bold;
+        font-size: 2.2rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="px-4 myx2 text-center border.bottom">
+        <img
+          class="cacas d-block mx-auto mb-2"
+          src="logo.png"
+          alt=""
+          width="30%"
+          height="30%"
+        />
+        <h1 class="display-5 fw-bold">Kilogramos a Onzas y Libras</h1>
+        <div class="col-lg-6 mx-auto p">
+          <p class="lead mb-0">
+            Conversión de kilogramos (kg) a onzas (oz) y libras (lb)
+          </p>
+          <p class="lead mb-4">Programado por: Jairo</p>
+        </div>
+      </div>
+
+      <div class="b-example-divider"></div>
+      <div class="container mt-5">
+        <div class="row" style="justify-content: center">
+          <div class="col-12 col-md-4">
+            <form>
+              <div class="mb-3">
+                <label class="form-label" for="kilogramos"
+                  >Kilogramos: <span id="lbl-kilogramos">0</span></label
+                >
+                <input
+                  class="form-range"
+                  type="range"
+                  min="0"
+                  max="200"
+                  id="kilogramos"
+                  oninput="cambiarKilogramos()"
+                />
+                <div class="form-text">
+                  Desliza para cambiar el valor de los kilogramos
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="from-label" for="kilogramos">Resultado :</label>
+                <div id="resultado">0 kilogramos son 0 onzas y 0 libras</div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="b-example-divider mb-0"></div>
+      </div>
+    </main>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+    <!-- paquete de tensorflow -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+    <script type="text/javascript">
+      var modelo = null;
+      (async () => {
+        console.log("Cargando Modelo");
+        modelo = await tf.loadLayersModel("model.json");
+        console.log("Modelo cargado...");
+      })();
+
+      function cambiarKilogramos() {
+        var kilogramos = document.getElementById("kilogramos").value;
+        document.getElementById("lbl-kilogramos").innerHTML = kilogramos;
+        if (modelo != null) {
+          var tensor = tf.tensor1d([parseFloat(kilogramos)]);
+          var prediccion = modelo.predict(tensor).dataSync();
+          var libras = Math.round(prediccion[0], 2);
+          var onzas = Math.round(prediccion[1], 2);
+
+          document.getElementById("resultado").innerHTML =
+            kilogramos +
+            " kilogramos son " +
+            libras +
+            " libras y " +
+            onzas +
+            " onzas";
+        } else {
+          document.getElementById("resultado").innerHTML = "Intente de nuevo";
+        }
+      }
+    </script>
+  </body>
+</html>
